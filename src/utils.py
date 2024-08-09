@@ -51,14 +51,15 @@ def greetings(date_string: str) -> str:
         logger.error("Введены некорректные данные!")
         raise ValueError("Введены некорректные данные!")
 
+
 # f = greetings("2025-12-06 20:42:30")
 # print(f)
 
 def reading_excel(file_name: str) -> List[Dict]:
-    """Функция название файла excel, возвращает DataFrame."""
-    logger.info("Функция начала свою работу.")
+    """Функция преобразования xls в DataFrame."""
+    logger.info(f"Функция запущена с входым файлом {file_name}.")
     if file_name.endswith("xls") or file_name.endswith("xlsx"):
-        logger.info("Функция начала обработку введённого файла.")
+        logger.info("Функция начала обработку входного файла.")
         file_with_dir = os.path.join(DATA_DIR, file_name)
         transactions_df = pd.read_excel(file_with_dir)
         # result = transactions_df.to_dict(orient="records")
@@ -225,4 +226,3 @@ if __name__ == "__main__":
     print(json_loader())
     users_currs = json_loader()[0]
     print(currency_rates(["USD"]))
-
