@@ -20,9 +20,10 @@ file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 
 
-def greetings(date_string: str) -> str:
-    """Функция принимает время в строке в формате '%Y-%m-%d %H:%M:%S',
+def make_greetings_from_time_date(date_string: str) -> str:
+    """Функция принимает строку с временем и датой в формате '%Y-%m-%d %H:%M:%S',
     возвращает приветствие в зависимости от времени суток."""
+
     logger.info(f"Старт функции с входными данными {date_string}")
 
     try:
@@ -52,10 +53,10 @@ def greetings(date_string: str) -> str:
         raise ValueError("Введены некорректные данные!")
 
 
-# f = greetings("2025-12-06 20:42:30")
+# f = make_greetings_from_time_date("2025-12-06 20:42:30")
 # print(f)
 
-def reading_excel(file_name: str) -> List[Dict]:
+def reading_file_from_excel(file_name: str) -> List[Dict]:
     """Функция преобразования xls в DataFrame."""
     logger.info(f"Функция запущена с входым файлом {file_name}.")
     if file_name.endswith("xls") or file_name.endswith("xlsx"):
@@ -71,20 +72,26 @@ def reading_excel(file_name: str) -> List[Dict]:
         raise ValueError("Неподдерживаемый формат файла!")
 
 
-def card_info(transactions: List[Dict]) -> List[Dict]:
+def get_cardmask_costs_and_cashback(transactions: List[Dict]) -> List[Dict]:
     """Функция принимает список транзакций(словарей).
-    Возвращает список словарей с информацией по каждой карте: последние 4 цифры номера карты,
-    общая сумма расходов, кэшбек (1 рубль на каждые 100 рублей)."""
+    Возвращает информацию по каждой карте: последние 4 цифры номера карты,
+    общая сумма расходов, кэшбек"""
+
     logger.info("Функция начала свою работу.")
+
     unique_card_nums = list(set([transaction["Номер карты"] for transaction in transactions]))
     expenditure_by_card = defaultdict(int)
+
     logger.info("Функция обрабатывает данные транзакций.")
+
     for card_num in unique_card_nums:
         for transaction in transactions:
             if transaction["Номер карты"] == card_num:
                 expenditure_by_card[card_num] += transaction["Сумма операции"]
     result_transaction_list = []
+
     logger.info("Функция формирует итоговый результат.")
+
     for item in expenditure_by_card:
         result_transaction_list.append(
             {
@@ -94,38 +101,47 @@ def card_info(transactions: List[Dict]) -> List[Dict]:
             }
         )
     logger.info("Функция успешно завершила свою работу.")
+
     return result_transaction_list
 
 
-def top_five_transactions(transactions: List[Dict]) -> List[Dict]:
+def get_top_transactions(transactions: List[Dict]) -> List[Dict]:
     """Функция принимает список транзакций(словарей).
-    Возвращает список словарей с топ-пятью транзакциями по сумме операции."""
+    Возвращает список словарей с пятью максимальными транзакциями по сумме операции."""
+
     logger.info("Функция начала свою работу.")
+
     sorted_transactions_list = sorted(transactions, key=lambda x: abs(x["Сумма операции"]))
+
     logger.info("Функция успешно завершила свою работу.")
+
     return sorted_transactions_list[-5:]
 
 
-def json_loader(file_name: str = "user_settings.json") -> Tuple[Any, Any]:
-    """Функция может принимать название json-файла пользовательских настроек
-    (по-умолчанию задано 'user_settings.json'), который расположен в корне проекта.
-    Обрабатывает json-файл пользовательских настроек.
+def get_file_from_json(file_name: str = "user_settings.json") -> Tuple[Any, Any]:
+    """Функция парсинга и обработки json-файла с транзакциями.
     Возвращает кортеж списков валют и акций."""
+
     logger.info("Функция начала свою работу.")
+
     file_with_dir = os.path.join(ROOT_DIR, file_name)
     try:
         with open(file_with_dir, "r", encoding="utf-8") as file_in:
-            data = json.load(file_in)
+            data_json = json.load(file_in)
+
             logger.info("Функция успешно завершила свою работу.")
-            return data["user_currencies"], data["user_stocks"]
+
+            return data_json["user_currencies"], data_json["user_stocks"]
     except Exception:
         logger.error("Возникла ошибка при обработке файла пользовательских настроек!")
         raise ValueError("Возникла ошибка при обработке файла пользовательских настроек!")
 
 
-def currency_rates(users_currencies: List) -> List[Dict[str, Any]]:
+def get_currency_rates_from_api(users_currencies: List) -> List[Dict[str, Any]]:
     """Функция принимает список валют. Возвращает курс валют, полученный через API."""
+
     logger.info("Функция начала свою работу.")
+
     try:
         result_currency_list = []
         load_dotenv()
@@ -145,9 +161,11 @@ def currency_rates(users_currencies: List) -> List[Dict[str, Any]]:
         raise Exception("При работе функции произошла ошибка!")
 
 
-def stock_rates(users_stocks: List) -> List[Dict[str, Any]]:
+def get_stock_rates_from_api(users_stocks: List) -> List[Dict[str, Any]]:
     """Функция принимает список акций. Возвращает котировки, полученные через API."""
+
     logger.info("Функция начала свою работу.")
+
     try:
         result_stocks_list = []
         load_dotenv()
@@ -167,12 +185,12 @@ def stock_rates(users_stocks: List) -> List[Dict[str, Any]]:
 
 
 if __name__ == "__main__":
-    # print(stock_rates(['AAPL', 'AMZN', 'GOOGL']))
-    print(greetings("2024-07-06 10:42:30"))
-    data = reading_excel("operations.xls")
-    print(card_info(data))
+    print(get_stock_rates_from_api(['AAPL', 'AMZN', 'GOOGL']))
+    print(make_greetings_from_time_date("2024-07-06 10:42:30"))
+    data = reading_file_from_excel("operations.xlsx")
+    print(get_cardmask_costs_and_cashback(data))
     print(
-        card_info(
+        get_cardmask_costs_and_cashback(
             [
                 {
                     "Дата операции": "28.03.2018 09:24:15",
@@ -211,7 +229,7 @@ if __name__ == "__main__":
             ]
         )
     )
-    print(top_five_transactions(data))
+    print(get_top_transactions(data))
     data_for_five = [
         {"Сумма операции": 1},
         {"Сумма операции": 9},
@@ -222,7 +240,7 @@ if __name__ == "__main__":
         {"Сумма операции": -100},
         {"Сумма операции": 5},
     ]
-    print(top_five_transactions(data_for_five))
-    print(json_loader())
-    users_currs = json_loader()[0]
-    print(currency_rates(["USD"]))
+    print(get_top_transactions(data_for_five))
+    print(get_file_from_json())
+    users_currs = get_file_from_json()[0]
+    print(get_currency_rates_from_api(["USD"]))
