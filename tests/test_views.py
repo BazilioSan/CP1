@@ -54,23 +54,23 @@ transactions = pd.DataFrame(
 )
 
 
-@patch("src.views.stock_rates")
-@patch("src.views.currency_rates")
-@patch("src.views.json_loader")
-@patch("src.views.top_five_transactions")
-@patch("src.views.card_info")
+@patch("src.views.get_stock_rates_from_api")
+@patch("src.views.get_currency_rates_from_api")
+@patch("src.views.get_file_from_json")
+@patch("src.views.get_top_transactions")
+@patch("src.views.get_cardmask_costs_and_cashback")
 def test_views(
-    mock_views_card_info,
-    mock_views_top_five_transactions,
-    mock_json_loader,
-    mock_views_currency_rates,
-    mock_views_stock_rates,
+    mock_views_get_cardmask_costs_and_cashback,
+    mock_views_get_top_transactions,
+    mock_get_file_from_json,
+    mock_views_get_currency_rates_from_api,
+    mock_views_get_stock_rates_from_api,
 ):
-    mock_views_card_info.return_value = {"cards_info": 1234}
-    mock_views_top_five_transactions.return_value = {"transactions": 1234}
-    mock_json_loader.return_value = ["USD", "EUR"]
-    mock_views_currency_rates.return_value = {"USD": 90}
-    mock_views_stock_rates.return_value = {"APPL": 1500}
+    mock_views_get_cardmask_costs_and_cashback.return_value = {"cards_info": 1234}
+    mock_views_get_top_transactions.return_value = {"transactions": 1234}
+    mock_get_file_from_json.return_value = ["USD", "EUR"]
+    mock_views_get_currency_rates_from_api.return_value = {"USD": 90}
+    mock_views_get_stock_rates_from_api.return_value = {"APPL": 1500}
     assert views("2024-07-06 10:42:30", transactions) == expected_json
 
 
