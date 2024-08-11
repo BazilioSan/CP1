@@ -188,7 +188,7 @@ if __name__ == "__main__":
     print(get_stock_rates_from_api(['AAPL', 'AMZN', 'GOOGL']))
     print(make_greetings_from_time_date("2024-07-06 10:42:30"))
     data = reading_file_from_excel("operations.xlsx")
-    # print(get_cardmask_costs_and_cashback(data))
+    print(get_cardmask_costs_and_cashback(data))
     # print(
     #     get_cardmask_costs_and_cashback(
     #         [
@@ -230,17 +230,17 @@ if __name__ == "__main__":
     #     )
     # )
     print(get_top_transactions(data))
-    data_for_five = [
-        {"Сумма операции": 1},
-        {"Сумма операции": 9},
-        {"Сумма операции": 4},
-        {"Сумма операции": 31},
-        {"Сумма операции": 11},
-        {"Сумма операции": -17},
-        {"Сумма операции": -100},
-        {"Сумма операции": 5},
-    ]
-    print(get_top_transactions(data_for_five))
+    # data_for_five = [
+    #     {"Сумма операции": 1},
+    #     {"Сумма операции": 9},
+    #     {"Сумма операции": 4},
+    #     {"Сумма операции": 31},
+    #     {"Сумма операции": 11},
+    #     {"Сумма операции": -17},
+    #     {"Сумма операции": -100},
+    #     {"Сумма операции": 5},
+    # ]
+    # print(get_top_transactions(data_for_five))
     print(get_file_from_json())
     users_currs = get_file_from_json()[0]
-    print(get_currency_rates_from_api(["USD"]))
+    # print(get_currency_rates_from_api(["USD"]))

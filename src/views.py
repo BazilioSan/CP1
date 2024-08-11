@@ -3,7 +3,7 @@ import logging
 
 from config import VIEWS_LOGS
 from src.utils import (
-    card_info,
+    get_cardmask_costs_and_cashback,
     get_currency_rates_from_api,
     make_greetings_from_time_date,
     get_file_from_json,
@@ -30,7 +30,7 @@ def views(date: str, transactions_df) -> str:
         logger.info("Функция собирает результаты работ своих подфункций.")
         greeting = make_greetings_from_time_date(date)
         logger.info("Функция приветствия завершила свою работу.")
-        info_about_cards = card_info(transactions)
+        info_about_cards = get_cardmask_costs_and_cashback(transactions)
         logger.info("Функция по сбору информации по картам завершила свою работу.")
         five_transactions = get_top_transactions((transactions))
         logger.info("Функция топ-5 транзакций завершила свою работу.")
